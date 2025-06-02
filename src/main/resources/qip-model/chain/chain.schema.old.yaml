@@ -58,11 +58,11 @@ properties:
           type: string
         properties:
           oneOf:
-            - $ref: '#/$defs/httpSender'
-            - $ref: '#/$defs/kafkaSender2'
-            - $ref: '#/$defs/kafkaTrigger2'
-            - $ref: '#/$defs/script'
-            - $ref: '#/$defs/httpTrigger'
+            - $ref: "#/$defs/httpSender"
+            - $ref: "#/$defs/kafkaSender2"
+            - $ref: "#/$defs/kafkaTrigger2"
+            - $ref: "#/$defs/script"
+            - $ref: "#/$defs/httpTrigger"
   dependencies:
     type: array
     items:
