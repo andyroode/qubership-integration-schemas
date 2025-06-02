@@ -74,11 +74,11 @@ properties:
               type: string
             properties:
               oneOf:
-                - $ref: '#/definitions/httpSender'
-                - $ref: '#/definitions/kafkaSender2'
-                - $ref: '#/definitions/kafkaTrigger2'
-                - $ref: '#/definitions/script'
-                - $ref: '#/definitions/httpTrigger'
+                - $ref: "#/definitions/httpSender"
+                - $ref: "#/definitions/kafkaSender2"
+                - $ref: "#/definitions/kafkaTrigger2"
+                - $ref: "#/definitions/script"
+                - $ref: "#/definitions/httpTrigger"
       dependencies:
         type: array
         items:
