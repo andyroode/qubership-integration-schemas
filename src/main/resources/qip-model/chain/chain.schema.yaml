@@ -19,15 +19,15 @@ properties:
   content:
     type: object
     required:
-#      - id
-#      - name
+      #      - id
+      #      - name
       - elements
       - migrations
     properties:
-#      id:
-#        type: string
-#      name:
-#        type: string
+      #      id:
+      #        type: string
+      #      name:
+      #        type: string
       description:
         type: string
       businessDescription:
@@ -93,19 +93,19 @@ definitions:
       - "$ref": "#/definitions/chainElementHttpTrigger"
       - "$ref": "#/definitions/chainElementHttpSender"
       - "$ref": "#/definitions/chainElementScript"
-#    discriminator:
-#      propertyName: elementType
-#      mapping:
-#        "http-trigger": "#/definitions/chainElementHttpTrigger"
-#        "http-sender": "#/definitions/chainElementHttpSender"
+  #    discriminator:
+  #      propertyName: elementType
+  #      mapping:
+  #        "http-trigger": "#/definitions/chainElementHttpTrigger"
+  #        "http-sender": "#/definitions/chainElementHttpSender"
 
   chainElementCommonFields:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
 
   chainElementHttpTrigger:
     allOf:
@@ -116,7 +116,7 @@ definitions:
         const: "http-trigger"
       properties:
         $ref: "#/definitions/chainElementHttpTriggerProperties"
-#    unevaluatedProperties: false
+  #    unevaluatedProperties: false
 
   chainElementHttpTriggerProperties:
     type: object
@@ -143,7 +143,7 @@ definitions:
         const: "http-sender"
       properties:
         $ref: "#/definitions/chainElementHttpSenderProperties"
-#    unevaluatedProperties: false
+  #    unevaluatedProperties: false
 
   chainElementHttpSenderProperties:
     type: object
