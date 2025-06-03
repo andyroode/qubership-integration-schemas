@@ -54,7 +54,7 @@ properties:
       elements:
         type: array
         items:
-          $ref: '#/definitions/chainElement'
+          $ref: "#/definitions/chainElement"
       dependencies:
         type: array
         items:
@@ -110,8 +110,8 @@ definitions:
         type: string
       properties:
         oneOf:
-          - $ref: './elements/httpSender.yaml'
-          - $ref: './elements/kafkaSender2.yaml'
-          - $ref: './elements/kafkaTrigger2.yaml'
-          - $ref: './elements/script.yaml'
-          - $ref: './elements/httpTrigger.yaml'
+          - $ref: "./elements/httpSender.yaml"
+          - $ref: "./elements/kafkaSender2.yaml"
+          - $ref: "./elements/kafkaTrigger2.yaml"
+          - $ref: "./elements/script.yaml"
+          - $ref: "./elements/httpTrigger.yaml"
