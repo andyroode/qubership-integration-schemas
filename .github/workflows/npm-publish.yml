@@ -87,4 +87,4 @@
         dist-tag: ${{ github.event_name == 'workflow_dispatch' && inputs.npm-dist-tag || 'latest' }}
         branch_name: ${{ github.event_name == 'workflow_dispatch' && inputs.branch_name || github.ref_name }}
       secrets:
-        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
