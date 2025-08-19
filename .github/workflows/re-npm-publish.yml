@@ -85,6 +85,7 @@ jobs:
 
       - name: Check current version
         id: current_version
+        if: ${{ !inputs.dry-run }}
         run: |
           if [ "$IS_LERNA" == "true" ]; then
             CURRENT_VERSION=$(lerna list --json | jq -r '.[0].version')
@@ -96,6 +97,7 @@ jobs:
           echo "Requested version: ${{ inputs.version }}"
 
       - name: Validate version
+        if: ${{ !inputs.dry-run }}
         run: |
           CURRENT_VERSION="${{ steps.current_version.outputs.current_version }}"
           REQUESTED_VERSION="${{ inputs.version }}"
@@ -117,6 +119,7 @@ jobs:
           echo "✅ Version validation passed: $REQUESTED_VERSION > $CURRENT_VERSION"
 
       - name: Update package version (for Lerna or NPM)
+        if: ${{ !inputs.dry-run }}
         run: |
           if [ "$IS_LERNA" = "true" ]; then
             echo "Updating version in lerna.json and all package.json files..."
@@ -129,6 +132,7 @@ jobs:
           git diff >> changes.txt
       
       - name: Commit Changes
+        if: ${{ !inputs.dry-run }}
         uses: netcracker/qubership-workflow-hub/actions/commit-and-push@v1.0.3
         with:
           commit_message: "Update package.json version to ${{ inputs.version }}"    
