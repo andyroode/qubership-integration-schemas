@@ -42,7 +42,7 @@
           description: 'NPM scope for the package'
           required: false
           type: string
-          default: '@netcracker'
+          default: '@andyroode'
         node-version:
           required: false
           type: string
@@ -79,7 +79,7 @@
       uses: Netcracker/qubership-workflow-hub/.github/workflows/re-npm-publish.yml@bugfix/update_npm
       with:
         version: ${{ github.event_name == 'workflow_dispatch' && inputs.version || '' }}
-        scope: ${{ github.event_name == 'workflow_dispatch' && inputs.scope || '@netcracker' }}
+        scope: ${{ github.event_name == 'workflow_dispatch' && inputs.scope || '@andyroode' }}
         node-version: ${{ github.event_name == 'workflow_dispatch' && inputs.node-version || '22.x' }}
         registry-url: ${{ github.event_name == 'workflow_dispatch' && inputs.registry-url || 'https://npm.pkg.github.com' }}
         update-nc-dependency: ${{ github.event_name == 'workflow_dispatch' && inputs.update-nc-dependency || false }}
