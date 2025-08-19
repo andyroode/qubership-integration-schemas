@@ -138,6 +138,7 @@ jobs:
           commit_message: "Update package.json version to ${{ inputs.version }}"    
 
       - name: Get package version
+        if: ${{ !inputs.dry-run }}
         id: get_version
         run: |
             if [ "$IS_LERNA" == "true" ]; then
