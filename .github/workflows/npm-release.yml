@@ -29,9 +29,6 @@
   run-name: NPM Package${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry-run)) && ' - Test' || ' - Release' }}${{ (github.event_name == 'workflow_dispatch' && !inputs.dry-run && inputs.version) && format(' {0}', inputs.version) || '' }}
   
   on:
-    push:
-      branches:
-        - '**'
     workflow_dispatch:
       inputs:
         version:
