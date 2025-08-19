@@ -9,7 +9,7 @@ on:
       scope:
         required: false
         type: string
-        default: "@andyroode"
+        default: "@netcracker"
       node-version:
         required: false
         type: string
@@ -28,7 +28,7 @@ on:
         type: boolean
         default: false
       dist-tag:
-        default: "latest"
+        default: "next"
         type: string
         description: "NPM dist-tag"
         required: false
@@ -36,9 +36,6 @@ on:
         required: false
         type: string
         default: "main"
-    secrets:
-      NODE_AUTH_TOKEN:
-        required: true
 
 permissions:
   contents: write
@@ -48,7 +45,7 @@ jobs:
   npm-build-publish:
     runs-on: ubuntu-latest
     env:
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
     steps:
       - name: Checkout repository

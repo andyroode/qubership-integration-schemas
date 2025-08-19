@@ -76,7 +76,7 @@
   
   jobs:
     npm-publish:
-      uses: Netcracker/qubership-workflow-hub/.github/workflows/re-npm-publish.yml@bugfix/update_npm
+      uses: ./.github/workflows/re-npm-publish.yml
       with:
         version: ${{ github.event_name == 'workflow_dispatch' && inputs.version || '' }}
         scope: ${{ github.event_name == 'workflow_dispatch' && inputs.scope || '@andyroode' }}
