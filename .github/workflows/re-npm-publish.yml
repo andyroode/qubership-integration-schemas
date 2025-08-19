@@ -9,7 +9,7 @@ on:
       scope:
         required: false
         type: string
-        default: "@netcracker"
+        default: "@andyroode"
       node-version:
         required: false
         type: string
@@ -28,7 +28,7 @@ on:
         type: boolean
         default: false
       dist-tag:
-        default: "next"
+        default: "latest"
         type: string
         description: "NPM dist-tag"
         required: false
@@ -90,7 +90,14 @@ jobs:
             npx lerna version ${{ inputs.version }} --yes --no-git-tag-version --no-push
           else
             echo "Updating version in package.json..."
-            npm version ${{ inputs.version }} --no-git-tag-version
+            # Force update version in package.json
+            node -e "
+              const fs = require('fs');
+              const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+              pkg.version = '${{ inputs.version }}';
+              fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+            "
+            echo "Version updated to ${{ inputs.version }}"
           fi
           git diff --color
           git diff >> changes.txt
