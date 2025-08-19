@@ -1,0 +1,153 @@
+---
+
+  # This GitHub Actions workflow can be triggered in two ways:
+  # 1. Automatically on push to any branch (runs in dry-run mode for safety)
+  # 2. Manually via workflow_dispatch with configurable parameters
+  #
+  # The workflow delegates the actual NPM publishing process to the re-npm-publish.yml workflow
+  # from the qubership-workflow-hub repository, which performs the following tasks:
+  # 1. Checks out the repository.
+  # 2. Sets up Node.js environment.
+  # 3. Installs dependencies.
+  # 4. Detects if the project is a Lerna monorepo.
+  # 5. Updates dependencies if required.
+  # 6. Updates package version in package.json or lerna.json.
+  # 7. Builds the project.
+  # 8. Runs tests.
+  # 9. Commits and pushes changes.
+  # 10. Publishes the package to NPM registry.
+  
+  # To make it work for your project, you need to adjust the package.json and add configuration file for GitHub release.
+  # Please find detailed instructions:
+  # https://github.com/netcracker/qubership-workflow-hub?tab=readme-ov-file#npm-project-release-workflow
+  #
+  # Note: When triggered by push, the workflow automatically runs in dry-run mode to prevent
+  # accidental publishing. Use workflow_dispatch for actual releases.
+  
+  name: Release NPM package
+  
+  run-name: NPM Package${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry-run)) && ' - Test' || ' - Release' }}${{ (github.event_name == 'workflow_dispatch' && !inputs.dry-run && inputs.version) && format(' {0}', inputs.version) || '' }}
+  
+  on:
+    push:
+      branches:
+        - '**'
+    workflow_dispatch:
+      inputs:
+        version:
+          description: 'Release version for NPM (e.g., 1.0.0)'
+          required: false
+          type: string
+        scope:
+          description: 'NPM scope for the package'
+          required: false
+          type: string
+          default: '@andyroode'
+        node-version:
+          required: false
+          type: string
+          default: "22.x"
+        registry-url:
+          required: false
+          type: string
+          default: "https://npm.pkg.github.com"
+        update-nc-dependency:
+          required: false
+          type: boolean
+          default: false
+        dry-run:
+          description: 'Run in dry-run mode (no actual publishing)'
+          required: false
+          type: boolean
+          default: false
+        npm-dist-tag:
+          description: 'NPM distribution tag'
+          required: false
+          type: string
+          default: 'latest'
+        branch_name:
+          required: false
+          type: string
+          default: "main"
+  
+  permissions:
+    contents: write
+    packages: write
+  
+  jobs:
+    check-tag:
+      if: ${{ inputs.dry-run }}
+      runs-on: ubuntu-latest
+      steps:
+        - name: Input parameters
+          run: |
+            echo "Version: ${{ github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
+
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Check if tag exists
+          id: check_tag
+          uses: netcracker/qubership-workflow-hub/actions/tag-checker@v1.0.4
+          with:
+            tag: 'v${{ github.event.inputs.version }}'
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Output result
+          run: |
+            echo "Tag exists: ${{ steps.check_tag.outputs.exists }}"
+            echo "Tag name: v${{ github.event.inputs.version }}"
+
+        - name: Fail if tag exists
+          if: steps.check_tag.outputs.exists == 'true'
+          run: |
+            echo "Tag already exists: v${{ github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
+            echo "Tag already exists: v${{ github.event.inputs.version }}"
+            exit 1
+    
+    npm-test:
+      needs: [check-tag]
+      uses: ./.github/workflows/re-npm-publish.yml
+      with:
+        version: ''
+        scope: '@netcracker'
+        node-version: '22.x'
+        registry-url: 'https://npm.pkg.github.com'
+        update-nc-dependency: false
+        dry-run: true
+        dist-tag: 'latest'
+        branch_name: ${{ github.ref_name }}
+      secrets:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+    tag:
+      if: ${{ inputs.dry-run }}
+      needs: [npm-test]
+      uses: netcracker/qubership-workflow-hub/.github/workflows/tag-creator.yml@v1.0.3
+      with:
+        tag-name: "v${{ github.event.inputs.version }}"
+    
+    npm-publish:
+      if: ${{ inputs.dry-run }}
+      needs: [tag]
+      uses: ./.github/workflows/re-npm-publish.yml
+      with:
+        version: ${{ github.event_name == 'workflow_dispatch' && inputs.version || '' }}
+        scope: ${{ github.event_name == 'workflow_dispatch' && inputs.scope || '@andyroode' }}
+        node-version: ${{ github.event_name == 'workflow_dispatch' && inputs.node-version || '22.x' }}
+        registry-url: ${{ github.event_name == 'workflow_dispatch' && inputs.registry-url || 'https://npm.pkg.github.com' }}
+        update-nc-dependency: ${{ github.event_name == 'workflow_dispatch' && inputs.update-nc-dependency || false }}
+        dry-run: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry-run) }}
+        dist-tag: ${{ github.event_name == 'workflow_dispatch' && inputs.npm-dist-tag || 'latest' }}
+        branch_name: ${{ github.event_name == 'workflow_dispatch' && inputs.branch_name || github.ref_name }}
+      secrets:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+    github-release:
+      if: ${{ inputs.dry-run }}
+      needs: [tag]
+      uses: netcracker/qubership-workflow-hub/.github/workflows/release-drafter.yml@v1.0.3
+      with:
+        version: ${{ github.event.inputs.version }}
+        publish: false

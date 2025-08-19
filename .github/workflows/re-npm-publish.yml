@@ -116,7 +116,7 @@ jobs:
             exit 1
           fi
           
-          echo "✅ Version validation passed: $REQUESTED_VERSION > $CURRENT_VERSION"
+          echo "Version validation passed: $REQUESTED_VERSION > $CURRENT_VERSION"
 
       - name: Update package version (for Lerna or NPM)
         if: ${{ !inputs.dry-run }}
