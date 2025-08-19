@@ -90,17 +90,15 @@ jobs:
             npx lerna version ${{ inputs.version }} --yes --no-git-tag-version --no-push
           else
             echo "Updating version in package.json..."
-            # Force update version in package.json
-            node -e "
-              const fs = require('fs');
-              const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-              pkg.version = '${{ inputs.version }}';
-              fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-            "
-            echo "Version updated to ${{ inputs.version }}"
+            npm version ${{ inputs.version }} --no-git-tag-version
           fi
           git diff --color
           git diff >> changes.txt
+      
+      - name: Commit Changes
+        uses: netcracker/qubership-workflow-hub/actions/commit-and-push@v1.0.3
+        with:
+          commit_message: "Update package.json version to ${{ inputs.version }}"    
 
       - name: Get package version
         id: get_version
