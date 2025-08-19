@@ -109,13 +109,7 @@
       uses: ./.github/workflows/re-npm-publish.yml
       with:
         version: ''
-        scope: '@netcracker'
-        node-version: '22.x'
-        registry-url: 'https://npm.pkg.github.com'
-        update-nc-dependency: false
         dry-run: true
-        dist-tag: 'latest'
-        branch_name: ${{ github.ref_name }}
       secrets:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
