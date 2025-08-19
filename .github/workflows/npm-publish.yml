@@ -86,4 +86,5 @@
         dry-run: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry-run) }}
         dist-tag: ${{ github.event_name == 'workflow_dispatch' && inputs.npm-dist-tag || 'latest' }}
         branch_name: ${{ github.event_name == 'workflow_dispatch' && inputs.branch_name || github.ref_name }}
-      secrets: inherit
+      secrets:
+        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}

@@ -36,6 +36,9 @@ on:
         required: false
         type: string
         default: "main"
+    secrets:
+      NODE_AUTH_TOKEN:
+        required: true
 
 permissions:
   contents: write
