@@ -24,7 +24,9 @@
   # Note: When triggered by push, the workflow automatically runs in dry-run mode to prevent
   # accidental publishing. Use workflow_dispatch for actual releases.
   
-  name: Release NPM package
+  name: Publish NPM package
+  
+  run-name: Publish NPM package${{ github.event_name == 'workflow_dispatch' && inputs.version && format(' {0}', inputs.version) || '' }}${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry-run)) && ' Test' || '' }}
   
   on:
     push:
