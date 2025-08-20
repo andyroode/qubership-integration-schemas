@@ -117,7 +117,7 @@
       
       npm-publish:
         if: ${{ !inputs.dry-run }}
-        needs: [tag]
+        needs: [npm-test]
         uses: Netcracker/qubership-workflow-hub/.github/workflows/re-npm-publish.yml@main
         with:
           version: ${{ inputs.version }}
@@ -132,7 +132,7 @@
 
       tag:
         if: ${{ !inputs.dry-run }}
-        needs: [npm-test]
+        needs: [npm-publish]
         uses: netcracker/qubership-workflow-hub/.github/workflows/tag-creator.yml@v1.0.3
         with:
           tag-name: "v${{ github.event.inputs.version }}"    
