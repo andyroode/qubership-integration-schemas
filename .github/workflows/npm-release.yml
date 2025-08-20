@@ -67,11 +67,7 @@
           required: false
           type: string
           default: 'latest'
-        branch_name:
-          required: false
-          type: string
-          default: "main"
-  
+ 
   permissions:
     contents: write
     packages: write
