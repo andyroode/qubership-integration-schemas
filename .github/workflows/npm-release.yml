@@ -115,13 +115,6 @@
           dry-run: true
         secrets: inherit
       
-      tag:
-        if: ${{ !inputs.dry-run }}
-        needs: [npm-test]
-        uses: netcracker/qubership-workflow-hub/.github/workflows/tag-creator.yml@v1.0.3
-        with:
-          tag-name: "v${{ github.event.inputs.version }}"
-      
       npm-publish:
         if: ${{ !inputs.dry-run }}
         needs: [tag]
@@ -134,8 +127,15 @@
           update-nc-dependency: ${{ inputs.update-nc-dependency }}
           dry-run: ${{ inputs.dry-run }}
           dist-tag: ${{ inputs.npm-dist-tag }}
-          ref: 'v${{ github.event.inputs.version }}'
+          ref: ${{ github.ref_name}}
         secrets: inherit
+
+      tag:
+        if: ${{ !inputs.dry-run }}
+        needs: [npm-test]
+        uses: netcracker/qubership-workflow-hub/.github/workflows/tag-creator.yml@v1.0.3
+        with:
+          tag-name: "v${{ github.event.inputs.version }}"    
   
       github-release:
         if: ${{ !inputs.dry-run }}
