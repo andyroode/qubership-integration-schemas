@@ -138,7 +138,7 @@
           update-nc-dependency: ${{ inputs.update-nc-dependency }}
           dry-run: ${{ inputs.dry-run }}
           dist-tag: ${{ inputs.npm-dist-tag }}
-          ref: v${{ github.event.inputs.version }}
+          ref: 'v${{ github.event.inputs.version }}'
         secrets: inherit
   
       github-release:
